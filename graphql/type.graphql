@@ -1,0 +1,131 @@
+type Game {
+    id: ID!
+    name: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type User {
+    id: ID!
+    name: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+
+    username: String!
+    email: String!
+    tag: String!
+    description: String
+    socials: [UserSocial]
+    stream_key: String!
+    balance: Float!
+    overlay_settings: [OverlaySetting]!
+    server_metadatas: [ServerMetadata]!
+    variables: [UserVariable]!
+    banned_words: [String]!
+
+    products: [Product]! @hasMany
+}
+
+type PurchaseProductPivot {
+    qty: Int
+}
+
+type Product {
+    id: ID!
+    name: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+
+    pivot: PurchaseProductPivot
+    is_stackable: Boolean!
+    user: User! @belongsTo
+    commands: [String]
+    price: Float
+    description: String
+}
+
+type Purchase {
+    id: ID!
+    created_at: DateTime!
+    updated_at: DateTime!
+
+    products: [Product!]! @belongsToMany
+    subtotal: Float
+    tax: Float
+    total: Float
+    extra: String
+    anonymous_name: String
+    message: String
+    user: User @belongsTo
+    receiver: User! @belongsTo
+    transaction: Transaction! @hasOne
+}
+
+type Transaction {
+    id: ID!
+    created_at: DateTime!
+    updated_at: DateTime!
+
+    payment_method: PaymentMethodEnum
+    amount: Float
+    request: String
+    callback: String
+    user: User! @belongsTo
+}
+
+type Photo {
+    id: ID!
+    name: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Audio {
+    id: ID!
+    name: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+
+type Video {
+    id: ID!
+    name: String
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+### NON LARAVEL MODELS ###
+
+type OverlaySetting {
+    color: String
+    duration: String
+    show_link: Boolean
+
+    item_count: Int
+    interval_days: Int
+    title: String
+    subtitle: String
+    extra_message: String
+
+    running_text_type: RunningTextType
+    theme: OverlayTheme
+    separator_type: SeparatorType
+    speed: Speed
+
+    type: OverlayType!
+}
+
+type UserSocial {
+    type: SocialType!
+    url: String!
+}
+
+type ServerMetadata {
+    hostname: String!
+    password: String
+    port: Int!
+}
+
+type UserVariable {
+    name: String!
+    value: String!
+}

@@ -1,0 +1,38 @@
+enum PaymentMethodEnum {
+    QRIS @enum(value: "QRIS")
+}
+
+enum OverlayTheme {
+    DEFAULT @enum(value: "DEFAULT")
+    SIMPLE @enum(value: "SIMPLE")
+    FUN @enum(value: "FUN")
+    BADUT @enum(value: "BADUT")
+}
+enum OverlayType {
+    NOTIFICATION @enum(value: "NOTIFICATION")
+    LEADERBOARD @enum(value: "LEADERBOARD")
+    GOAL @enum(value: "GOAL")
+    RUNNING_TEXT @enum(value: "RUNNING_TEXT")
+    QR_CODE @enum(value: "QR_CODE")
+}
+
+enum RunningTextType {
+    LATEST @enum(value: "LATEST")
+    TOP @enum(value: "TOP")
+}
+enum SeparatorType {
+    DOT @enum(value: "DOT")
+    ICON @enum(value: "ICON")
+}
+
+enum Speed {
+    SLOW @enum(value: "SLOW")
+    NORMAL @enum(value: "NORMAL")
+    FAST @enum(value: "FAST")
+}
+
+enum SocialType {
+    FACEBOOK @enum(value: "FACEBOOK")
+    TWITTER @enum(value: "TWITTER")
+    YOUTUBE @enum(value: "YOUTUBE")
+}

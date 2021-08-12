@@ -1,0 +1,44 @@
+input createUser {
+    name: String!
+    username: String!
+    password: String! @hash
+    email: String!
+    tag: String!
+    description: String
+}
+input updateUser {
+    name: String
+    username: String
+    password: String @hash
+    email: String
+    tag: String
+    description: String
+}
+
+input createProduct {
+    is_stackable: Boolean!
+    user_id: ID!
+    name: String!
+    commands: [String]
+    price: Float!
+    description: String
+}
+input updateProduct {
+    name: String
+    is_stackable: Boolean
+    commands: [String]
+    price: Float
+    description: String
+}
+
+input createPurchase {
+    receiver_id: ID!
+    anonymous_name: String
+    message: String
+    products: [ProductPurchaseInput!]!
+}
+
+input ProductPurchaseInput {
+    id: ID!
+    qty: Int
+}
