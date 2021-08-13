@@ -22,9 +22,25 @@ class UserFactory extends Factory
      */
     public function definition()
     {
+        $email = $this->faker->unique()->safeEmail();
         return [
             'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'email' => $email,
+            'username' => explode('@', $email)[0],
+            'tag' => collect([
+                'Virtual Youtuber',
+                'Youtuber',
+                'Professional Player',
+                'Cosplayer',
+                'Top Simper'
+            ])->random(1)->first(),
+            'description' => collect([
+                '#1 Apex Predator',
+                'Master Gawr Gura Simper',
+                'Professional Simper',
+                'Amelia Watson Fan',
+            ])->random(1)->first(),
+            'stream_key' => Str::random(10),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
