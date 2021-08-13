@@ -23,7 +23,7 @@ type User {
     variables: [UserVariable]!
     banned_words: [String]!
 
-    products: [Product]! @hasMany
+    products: [Product]! @hasMany(type: CONNECTION)
 }
 
 type PurchaseProductPivot {

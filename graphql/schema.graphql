@@ -11,10 +11,11 @@ scalar DateTime
 
 type Query {
     # User
-    users: [User!]! @paginate(defaultCount: 10)
+    users: [User!]! @paginate(type: CONNECTION)
     user(id: ID @eq): User @find
+    userByUsername(username: String! @eq): User @first
     # Product
-    products: [Product!]! @paginate(defaultCount: 10)
+    products: [Product!]! @paginate(type: CONNECTION)
     product(id: ID @eq): Product @find
 }
 

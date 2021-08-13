@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->boolean('is_stackable')->default(false);
-            $table->json('commands');
+            $table->json('commands')->nullable();
             $table->string('description')->nullable();
             $table->double('price')->nullable();
             $table->timestamps();

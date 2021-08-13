@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -23,23 +24,29 @@ class UserFactory extends Factory
     public function definition()
     {
         $email = $this->faker->unique()->safeEmail();
+        $username = explode('@', $email)[0];
+
+        $tag = collect([
+            'Virtual Youtuber',
+            'Youtuber',
+            'Professional Player',
+            'Cosplayer',
+            'Top Simper'
+        ])->random(1)->first();
+
+        $job = collect([
+            '#1 Apex Predator',
+            'Master Gawr Gura Simper',
+            'Professional Simper',
+            'Amelia Watson Fan',
+        ])->random(1)->first();
+
         return [
             'name' => $this->faker->name(),
             'email' => $email,
-            'username' => explode('@', $email)[0],
-            'tag' => collect([
-                'Virtual Youtuber',
-                'Youtuber',
-                'Professional Player',
-                'Cosplayer',
-                'Top Simper'
-            ])->random(1)->first(),
-            'description' => collect([
-                '#1 Apex Predator',
-                'Master Gawr Gura Simper',
-                'Professional Simper',
-                'Amelia Watson Fan',
-            ])->random(1)->first(),
+            'username' => $username,
+            'tag' => $tag,
+            'description' => 'Hi aku adalah ' . $username . 'aku seorang ' . $tag . 'aku juga adalah ' . $job . 'salam kenal  dan bertemu semuanya !',
             'stream_key' => Str::random(10),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -58,6 +65,20 @@ class UserFactory extends Factory
             return [
                 'email_verified_at' => null,
             ];
+        });
+    }
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (User $user) {
+            //
+        })->afterCreating(function (User $user) {
+            $productFactory = Product::factory()->count(rand(10, 20))->make();
+            $user->products()->saveMany($productFactory);
         });
     }
 }

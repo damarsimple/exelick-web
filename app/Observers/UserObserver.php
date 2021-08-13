@@ -34,7 +34,8 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        //
+        $user->username = strtolower($user->username);
+        $user->saveQuietly();
     }
 
     /**
