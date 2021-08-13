@@ -38,7 +38,7 @@ class Seed extends Command
      */
     public function handle()
     {
-        User::factory()->count(10)->create();
+        User::factory()->count(100)->create();
         return 0;
     }
 }
