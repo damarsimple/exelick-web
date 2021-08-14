@@ -23,7 +23,10 @@ type User {
     variables: [UserVariable]!
     banned_words: [String]!
 
-    products: [Product]! @hasMany(type: CONNECTION)
+    products(name: String @where(operator: "like")): [Product]!
+        @hasMany(type: CONNECTION)
+
+    productCount: Int! @count(relation: "products")
 }
 
 type PurchaseProductPivot {

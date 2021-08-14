@@ -29,6 +29,8 @@ class CreateUsersTable extends Migration
             $table->json('variables')->nullable();
             $table->json('banned_words')->nullable();
 
+            $table->boolean('is_admin')->default(false);
+
             $table->double('balance')->default(0);
             $table->string('tag');
             $table->string('description')->nullable();

@@ -11,23 +11,42 @@ scalar DateTime
 
 type Query {
     # User
+    me: User @auth
     users: [User!]! @paginate(type: CONNECTION)
-    user(id: ID @eq): User @find
+    user(id: ID! @eq): User @find
     userByUsername(username: String! @eq): User @first
     # Product
-    products: [Product!]! @paginate(type: CONNECTION)
+    products(
+        user_id: ID @eq
+        name: String @where(operator: "like")
+    ): [Product!]! @paginate(type: CONNECTION)
     product(id: ID @eq): Product @find
 }
 
 type Mutation {
     # User
-    createUser(input: createUser! @spread): User @create
-    updateUser(id: ID!, input: updateUser! @spread): User @update
-    deleteUser(id: ID!): User @delete
+    createUser(input: createUser! @spread): User @create @can(ability: "create")
+    updateUser(id: ID! @eq, input: updateUser! @spread): User
+        @update
+        @can(ability: "update", find: "id")
+    deleteUser(id: ID!): User @delete @can(ability: "delete")
     # Product
     createProduct(input: createProduct! @spread): Product @create
     updateProduct(id: ID!, input: updateProduct! @spread): Product @update
     deleteProduct(id: ID!): Product @delete
     # Purchase
     createPurchase(input: createPurchase! @spread): Purchase
+
+    login(input: login! @spread): LoginOutput
+}
+
+type LoginOutput {
+    user: User
+    token: String
+    message: String
+}
+
+input login {
+    email: String!
+    password: String!
 }
