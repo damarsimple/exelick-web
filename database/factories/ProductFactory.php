@@ -34,8 +34,8 @@ class ProductFactory extends Factory
         ])->random(1)->first();
 
         return [
-            'name' => 'No Simps',
-            'is_stackable' => rand(1, 9) == 2,
+            'name' => $this->faker->name(),
+            'is_stackable' => rand(1, 5) == 2,
             'price' => rand(1000, 10000),
             'description' => 'Berhenti Simping ' . $simpTarget
         ];

@@ -19,6 +19,8 @@ class CreateTransactionsTable extends Migration
             $table->string('payment_method');
             $table->double('amount');
             $table->json('request')->nullable();
+            $table->uuid('uuid')->nullable();
+            $table->string('status')->default('UNPAID');
             $table->json('callback')->nullable();
             $table->foreignId('purchase_id')->constrained();
             $table->foreignId('user_id')->constrained();

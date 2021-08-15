@@ -2,7 +2,9 @@
 
 namespace App\Observers;
 
+use App\Events\TransactionPaidEvent;
 use App\Models\Transaction;
+use App\Models\User;
 
 class TransactionObserver
 {
@@ -25,7 +27,16 @@ class TransactionObserver
      */
     public function updated(Transaction $transaction)
     {
-        //
+        if ($transaction->status == "PAID") {
+
+            $user = $transaction->user;
+
+            $user->balance += $transaction->amount;
+
+            broadcast(new TransactionPaidEvent($transaction));
+
+            $user->save();
+        }
     }
 
     /**

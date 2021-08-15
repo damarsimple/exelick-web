@@ -44,6 +44,7 @@ type Product {
     user: User! @belongsTo
     commands: [String]
     price: Float
+    user_id: ID!
     description: String
 }
 
@@ -69,7 +70,9 @@ type Transaction {
     created_at: DateTime!
     updated_at: DateTime!
 
-    payment_method: PaymentMethodEnum
+    payment_method: String!
+    status: String!
+    request: TripayTransactionResponse
     amount: Float
     request: String
     callback: String
@@ -131,4 +134,43 @@ type ServerMetadata {
 type UserVariable {
     name: String!
     value: String!
+}
+
+type TripayTransactionResponse {
+    reference: String!
+    merchant_ref: String!
+    payment_selection_type: String!
+    payment_method: String!
+    payment_name: String!
+    customer_name: String!
+    customer_email: String!
+    customer_phone: String!
+    reference: String!
+    reference: String!
+    amount: Int!
+    fee_merchant: Int!
+    fee_customer: Int!
+    total_fee: Int!
+    amount_received: Int!
+    checkout_url: String!
+    status: String!
+    expired_time: Int!
+    order_items: [TripayOrderItem!]!
+    instructions: [TripayInstruction!]!
+
+    qr_string: String!
+    qr_url: String!
+}
+
+type TripayOrderItem {
+    sku: String!
+    name: String!
+    price: Int!
+    quantity: Int!
+    subtotal: Int!
+}
+
+type TripayInstruction {
+    steps: [String!]!
+    title: String!
 }

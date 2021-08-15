@@ -16,6 +16,7 @@ class Tripay
     private string $apiKey;
 
     private string $signature;
+    private float|int $amount;
 
     private string $channel;
     private string $merchantRef;
@@ -88,6 +89,12 @@ class Tripay
 
     private PendingRequest $httpClient;
 
+    public function setAmount(float|int $amount)
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
     public function __construct()
     {
         $this->privateKey = env('TRIPAY_PRIVATE_KEY', '');
@@ -99,7 +106,7 @@ class Tripay
                 'Authorization' => 'Bearer ' . $this->apiKey,
             ]);
 
-        $this->endPoint = env('APP_DEBUG') ? 'https://tripay.co.id/api' : 'https://tripay.co.id/api-sandbox';
+        $this->endPoint = env('APP_DEBUG') ? 'https://tripay.co.id/api-sandbox' : 'https://tripay.co.id/api';
     }
 
 
@@ -119,22 +126,31 @@ class Tripay
 
     private function generateSignature()
     {
-        $this->signature = hash_hmac('sha256', $this->merchantCode . $this->channel . $this->merchantRef, $this->privateKey);
+        $this->signature = hash_hmac('sha256', $this->merchantCode .  $this->merchantRef . $this->amount, $this->privateKey);
         return $this;
     }
 
-    public function makeTransaction(string $channel, string $name)
+    /** 
+     * customer_name, customer_email, customer_phone, 
+     * order_items [ name, price , quantity ]
+     */
+    public function makeTransaction(array $data)
     {
-        $this->setChannel($channel);
+        if (!$this->amount) {
+            throw new Exception('Amount not set');
+        }
+
         $this->generateMerchantRef();
         $this->generateSignature();
 
-        return $this->httpClient->post($this->endPoint . '/open-payment/create', [
-            'name' => $this->channel,
+        return (object) $this->httpClient->post($this->endPoint . '/transaction/create', array_merge($data, [
+            'method' => $this->channel,
+            'amount' => $this->amount,
             'merchant_ref' => $this->merchantRef,
-            'customer_name' => $name,
-            'signature' => $this->signature
-        ])->json();
+            'merchant_ref' => $this->merchantRef,
+            'signature' => $this->signature,
+
+        ]))->json()['data'];
     }
 
     public function getChannels()
@@ -171,6 +187,6 @@ class Tripay
 
     public function getTransaction(string $uuid)
     {
-        return $this->httpClient->get($this->endPoint . '/open-payment/' .  $uuid . '/detail')->json();
+        return $this->httpClient->get($this->endPoint . '/transaction/' .  $uuid . '/detail')->json();
     }
 }

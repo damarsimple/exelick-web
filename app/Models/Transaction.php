@@ -12,6 +12,16 @@ class Transaction extends Model
 
     public const QRIS = "QRIS";
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'request' => 'array',
+        'callback' => 'array',
+    ];
+
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class);
