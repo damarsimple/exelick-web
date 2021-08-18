@@ -174,3 +174,16 @@ type TripayInstruction {
     steps: [String!]!
     title: String!
 }
+
+type Picture {
+    id: ID!
+    name: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+
+    cid: String
+    original_size: Int!
+    compressed_size: Int!
+    real_path: String!
+    path: String!
+}

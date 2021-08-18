@@ -5,6 +5,9 @@ scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
 scalar DateTime
     @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
+scalar Upload
+    @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Upload")
+
 #import enum.graphql
 #import type.graphql
 #import input.graphql
@@ -44,6 +47,8 @@ type Mutation {
     createPurchase(input: createPurchase! @spread): PurchaseData
 
     login(input: login! @spread): LoginOutput
+
+    upload_picture(file: Upload! @spread): Picture
 }
 
 type PurchaseData {
