@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 trait Attachable
 {
@@ -19,5 +20,10 @@ trait Attachable
     public function getRealPathAttribute(): string
     {
         return 'https://'  . $this->cid .  '.ipfs.dweb.link' . '/' . $this->name;
+    }
+
+    public function attachable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\Libraries\OyIndonesia;
 use App\Libraries\Tripay;
 use App\Models\Purchase;
 use App\Models\Transaction;
+use Illuminate\Support\Str;
 
 class CreatePurchase
 {
@@ -42,52 +44,49 @@ class CreatePurchase
 
         foreach ($purchase->products as $product) {
             array_push($items, [
-                'price' => $product->price,
-                'sku' => $product->id,
+                'price_per_item' => $product->price,
+                'description' => $product->description,
                 'quantity' => $product->pivot->qty,
-                'name' => $product->name
+                'item' => $product->name
             ]);
             $subTotal += $product->price * $product->pivot->qty;
         }
 
-        $tripay = new Tripay();
+        $transactionRef = Str::uuid();
 
-        $tripay->setChannel('QRISC');
-
-        $purchase->extra = $tripay->getTaxMap();
-
-        $purchase->subtotal = $subTotal;
-
-        $purchase->tax =  $tripay->calculateTax($subTotal);
-
-        $purchase->total = $subTotal + $purchase->tax;
-
-
-        $purchase->save();
-
-        $tripay->setAmount($purchase->subtotal);
-
-
-
-        $data = [
-            'customer_name' => $args['anonymous_name'],
-            'customer_email' =>  $args['anonymous_email'],
-            'customer_phone' => $args['anonymous_phone'],
-            'order_items' => $items,
+        $attr = [
+            'partner_tx_id' => $transactionRef,
+            'description' => 'Donasi untuk ' . $purchase->receiver->name,
+            'sender_name' => $args['anonymous_name'],
+            'full_name' => $args['anonymous_name'],
+            'amount' => $purchase->subtotal,
+            'email' => 'yono@oyindonesia.com',
+            'phone_number' => '085712163208',
+            'is_open' => true,
+            'step' => 'input-amount',
+            'include_admin_fee' => true,
+            'list_disabled_payment_methods' => '',
+            'list_enabled_banks' => '002, 008, 009, 013, 022',
+            'is_va_lifetime' => false,
+            'due_date' => now()->addDay(1)->format('yyyy-MM-dd HH:mm:ss'),
+            // 'partner_user_id' => 'OYON-CHECKOUT000003',
+            'invoice_items' => $items
         ];
 
-        $x = $tripay->makeTransaction($data);
+
+        $oy = new OyIndonesia();
+
+        $x =        $oy->makeInvoice($attr);
 
         $transaction = new Transaction();
 
-        $transaction->payment_method = $x->payment_method;
+        $transaction->payment_method = 'OY Indonesia';
 
-        $transaction->uuid = $x->merchant_ref;
+        $transaction->uuid = $transactionRef;
 
-        $transaction->status = $x->status;
+        $transaction->status = 'PENDING';
 
-
-        $transaction->amount = $x->amount_received;
+        $transaction->amount = $purchase->subtotal;
 
         $transaction->user_id = $purchase->receiver_id;
 
@@ -101,62 +100,6 @@ class CreatePurchase
 
         $purchase->save();
 
-        //  (
-        //     [reference] => DEV-T554018614Z3ZCH
-        //     [merchant_ref] => 89e939e6-1f6d-40b4-b030-23cbedf6f47b
-        //     [payment_selection_type] => static
-        //     [payment_method] => QRISC
-        //     [payment_name] => QRIS (Customizable)
-        //     [customer_name] => test ppl
-        //     [customer_email] => test@ppl.com
-        //     [customer_phone] => 08987181017
-        //     [callback_url] => 
-        //     [return_url] => 
-        //     [amount] => 10000
-        //     [fee_merchant] => 820
-        //     [fee_customer] => 0
-        //     [total_fee] => 820
-        //     [amount_received] => 9180
-        //     [pay_code] => 
-        //     [pay_url] => 
-        //     [checkout_url] => https://tripay.co.id/checkout/DEV-T554018614Z3ZCH
-        //     [status] => UNPAID
-        //     [expired_time] => 1629115703
-        //     [order_items] => Array
-        //         (
-        //             [0] => Array
-        //                 (
-        //                     [sku] => 
-        //                     [name] => test
-        //                     [price] => 10000
-        //                     [quantity] => 1
-        //                     [subtotal] => 10000
-        //                 )
-
-        //         )
-
-        //     [instructions] => Array
-        //         (
-        //             [0] => Array
-        //                 (
-        //                     [title] => Pembayaran via QRIS
-        //                     [steps] => Array
-        //                         (
-        //                             [0] => Masuk ke aplikasi dompet digital Anda yang telah mendukung QRIS
-        //                             [1] => Pindai/Scan QR Code yang tersedia
-        //                             [2] => Akan muncul detail transaksi. Pastikan data transaksi sudah sesuai
-        //                             [3] => Selesaikan proses pembayaran Anda
-        //                             [4] => Transaksi selesai. Simpan bukti pembayaran Anda
-        //                         )
-
-        //                 )
-
-        //         )
-
-        //     [qr_string] => SANDBOX MODE
-        //     [qr_url] => https://tripay.co.id/qr/DEV-T554018614Z3ZCH
-        // )
-
         return [
             'purchase' => $purchase,
             'transaction' => $transaction,
@@ -166,3 +109,31 @@ class CreatePurchase
         ];
     }
 }
+
+    // $tripay = new Tripay();
+
+        // $tripay->setChannel('QRISC');
+
+        // $purchase->extra = $tripay->getTaxMap();
+
+        // $purchase->subtotal = $subTotal;
+
+        // $purchase->tax =  $tripay->calculateTax($subTotal);
+
+        // $purchase->total = $subTotal + $purchase->tax;
+
+
+        // $purchase->save();
+
+        // $tripay->setAmount($purchase->subtotal);
+
+
+
+        // $data = [
+        //     'customer_name' => $args['anonymous_name'],
+        //     'customer_email' =>  $args['anonymous_email'],
+        //     'customer_phone' => $args['anonymous_phone'],
+        //     'order_items' => $items,
+        // ];
+
+        // $x = $tripay->makeTransaction($data);

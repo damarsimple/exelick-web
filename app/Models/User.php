@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Enum\PictureRole;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -50,5 +53,15 @@ class User extends Authenticatable
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function profilepicture(): MorphOne
+    {
+        return $this->morphOne(Picture::class, 'attachable')->where('roles', PictureRole::PROFILE_PICTURE);
+    }
+
+    public function banner(): MorphOne
+    {
+        return $this->morphOne(Picture::class, 'attachable')->where('roles', PictureRole::BANNER);
     }
 }

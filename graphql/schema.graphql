@@ -32,6 +32,10 @@ type TaxResult {
     tax: Float!
 }
 
+input PictureAssignInput {
+    id: ID!
+}
+
 type Mutation {
     # User
     createUser(input: createUser! @spread): User @create @can(ability: "create")
@@ -39,6 +43,11 @@ type Mutation {
         @update
         @can(ability: "update", find: "id")
     deleteUser(id: ID!): User @delete @can(ability: "delete")
+    update_user_picture(
+        id: ID!
+        profilepicture: PictureAssignInput
+        banner: PictureAssignInput
+    ): User
     # Product
     createProduct(input: createProduct! @spread): Product @create
     updateProduct(id: ID!, input: updateProduct! @spread): Product @update
@@ -56,7 +65,7 @@ type PurchaseData {
     success: Boolean!
     purchase: Purchase
     transaction: Transaction
-    payment: TripayTransactionResponse
+    # payment: TripayTransactionResponse
 }
 
 type LoginOutput {

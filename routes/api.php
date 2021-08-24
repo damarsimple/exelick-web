@@ -22,9 +22,15 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/payment', function (Request $request) {
 
-    $transaction = Transaction::where('uuid', $request->merchant_ref)->firstOrFail();
+    if (!$request->status->code == "000") {
+        return 'OK';
+    }
 
-    $transaction->status = $request->status;
+    $transaction = Transaction::where('uuid', $request->partner_trx_id)->firstOrFail();
+
+    $transaction->status = $request->status->code;
+
+    $transaction->amount = $request->amount;
 
     $transaction->callback = $request->toArray();
 

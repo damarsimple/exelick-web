@@ -27,6 +27,9 @@ type User {
         @hasMany(type: CONNECTION)
 
     productCount: Int! @count(relation: "products")
+
+    profilepicture: Picture @morphOne
+    banner: Picture @morphOne
 }
 
 type PurchaseProductPivot {
@@ -46,6 +49,8 @@ type Product {
     price: Float
     user_id: ID!
     description: String
+
+    cover: Picture @morphOne
 }
 
 type Purchase {
@@ -72,18 +77,24 @@ type Transaction {
 
     payment_method: String!
     status: String!
-    request: TripayTransactionResponse
+    request: OyRequestTransactionResponse
     amount: Float
     request: String
     callback: String
     user: User! @belongsTo
 }
 
-type Photo {
+type Picture {
     id: ID!
     name: String
     created_at: DateTime!
     updated_at: DateTime!
+
+    mime: String!
+    original_size: Int!
+    original_size: Int!
+    cid: String
+    path: String
 }
 
 type Audio {
@@ -136,43 +147,10 @@ type UserVariable {
     value: String!
 }
 
-type TripayTransactionResponse {
-    reference: String!
-    merchant_ref: String!
-    payment_selection_type: String!
-    payment_method: String!
-    payment_name: String!
-    customer_name: String!
-    customer_email: String!
-    customer_phone: String!
-    reference: String!
-    reference: String!
-    amount: Int!
-    fee_merchant: Int!
-    fee_customer: Int!
-    total_fee: Int!
-    amount_received: Int!
-    checkout_url: String!
-    status: String!
-    expired_time: Int!
-    order_items: [TripayOrderItem!]!
-    instructions: [TripayInstruction!]!
-
-    qr_string: String!
-    qr_url: String!
-}
-
-type TripayOrderItem {
-    sku: String!
-    name: String!
-    price: Int!
-    quantity: Int!
-    subtotal: Int!
-}
-
-type TripayInstruction {
-    steps: [String!]!
-    title: String!
+enum PictureRole {
+    PROFILE_PICTURE @enum(value: "PROFILE_PICTURE")
+    BANNER @enum(value: "BANNER")
+    COVER @enum(value: "COVER")
 }
 
 type Picture {
@@ -186,4 +164,13 @@ type Picture {
     compressed_size: Int!
     real_path: String!
     path: String!
+    roles: PictureRole
+}
+
+type OyRequestTransactionResponse {
+    payment_link_id: String!
+    message: String!
+    email_status: String!
+    url: String!
+    status: Boolean!
 }

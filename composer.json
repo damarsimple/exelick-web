@@ -17,7 +17,8 @@
         "laravel/telescope": "^4.6",
         "laravel/tinker": "^2.5",
         "mll-lab/laravel-graphql-playground": "^2.5",
-        "nuwave/lighthouse": "^5.18"
+        "nuwave/lighthouse": "^5.18",
+        "xendit/xendit-php": "^2.11"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
