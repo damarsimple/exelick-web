@@ -49,9 +49,13 @@ type Mutation {
         banner: PictureAssignInput
     ): User
     # Product
-    createProduct(input: createProduct! @spread): Product @create
+    createProduct(input: createProduct! @spread): Product
+        @create
+        @inject(context: "user.id", name: "user_id")
     updateProduct(id: ID!, input: updateProduct! @spread): Product @update
     deleteProduct(id: ID!): Product @delete
+
+    update_product_picture(id: ID!, cover: PictureAssignInput): Product
     # Purchase
     createPurchase(input: createPurchase! @spread): PurchaseData
 

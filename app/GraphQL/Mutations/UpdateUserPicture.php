@@ -17,6 +17,11 @@ class UpdateUserPicture
         $user = User::findOrFail($args['id']);
 
         if (array_key_exists('banner', $args)) {
+
+            if ($user->banner()->exists()) {
+                $user->banner()->delete();
+            }
+
             $picture = Picture::findOrFail($args['banner']['id']);
             $picture->roles =  PictureRole::BANNER;
 
@@ -27,6 +32,11 @@ class UpdateUserPicture
         }
 
         if (array_key_exists('profilepicture', $args)) {
+
+            if ($user->profilepicture()->exists()) {
+                $user->profilepicture()->delete();
+            }
+
             $picture = Picture::findOrFail($args['profilepicture']['id']);
             $picture->roles =  PictureRole::PROFILE_PICTURE;
 

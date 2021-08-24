@@ -17,7 +17,6 @@ input updateUser {
 
 input createProduct {
     is_stackable: Boolean!
-    user_id: ID!
     name: String!
     commands: [String]
     price: Float!
