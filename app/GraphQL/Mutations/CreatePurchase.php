@@ -74,13 +74,13 @@ class CreatePurchase
         ];
 
 
-        $oy = new OyIndonesia();
+        // $oy = new OyIndonesia();
 
-        $x =        $oy->makeInvoice($attr);
+        // $x =        $oy->makeInvoice($attr);
 
         $transaction = new Transaction();
 
-        $transaction->payment_method = 'OY Indonesia';
+        $transaction->payment_method = 'Xendit - ';
 
         $transaction->uuid = $transactionRef;
 

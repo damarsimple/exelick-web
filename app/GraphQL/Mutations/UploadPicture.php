@@ -69,7 +69,7 @@ class UploadPicture
 
             $picture->save();
         } catch (ProcessFailedException $exception) {
-            // echo $exception->getMessage();
+            echo $exception->getMessage();
         }
 
 

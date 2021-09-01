@@ -62,6 +62,17 @@ type Mutation {
     login(input: login! @spread): LoginOutput
 
     upload_picture(file: Upload! @spread): Picture
+
+
+    #admin
+    send_invitation(email: String!): InvitationOutput
+
+}
+
+
+type InvitationOutput {
+    status: Boolean!
+    message: String
 }
 
 type PurchaseData {
