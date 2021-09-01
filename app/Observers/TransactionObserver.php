@@ -27,7 +27,7 @@ class TransactionObserver
      */
     public function updated(Transaction $transaction)
     {
-        if ($transaction->status == "000") {
+        if ($transaction->status == "settlement") {
 
             $user = $transaction->user;
 

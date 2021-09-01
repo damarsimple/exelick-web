@@ -75,12 +75,18 @@ type InvitationOutput {
     message: String
 }
 
+type MidtransRequestOutput {
+    token: String!
+    redirect_url: String!
+    uuid: String!
+}
+
 type PurchaseData {
     message: String
     success: Boolean!
     purchase: Purchase
     transaction: Transaction
-    # payment: TripayTransactionResponse
+    payment: MidtransRequestOutput
 }
 
 type LoginOutput {

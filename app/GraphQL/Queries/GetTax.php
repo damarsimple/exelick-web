@@ -12,8 +12,10 @@ class GetTax
      */
     public function __invoke($_, array $args)
     {
-        $tripay = new Tripay();
-        $tripay->setChannel('QRIS');
-        return ['tax' => $tripay->calculateTax($args['price'])];
+        // $tripay = new Tripay();
+        // $tripay->setChannel('QRIS');
+        // return ['tax' => $tripay->calculateTax($args['price'])];
+
+        return ['tax' => 0];
     }
 }
