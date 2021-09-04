@@ -30,6 +30,9 @@ type User {
 
     profilepicture: Picture @morphOne
     banner: Picture @morphOne
+
+    is_admin: Boolean!
+    is_active: Boolean!
 }
 
 type PurchaseProductPivot {

@@ -26,6 +26,8 @@ type Query {
     product(id: ID @eq): Product @find
 
     getTax(price: Int!): TaxResult!
+
+    query_invitation(username: String!): User
 }
 
 type TaxResult {
@@ -67,6 +69,8 @@ type Mutation {
     #admin
     send_invitation(email: String!): InvitationOutput
 
+    activate_invitation(uuid: String!, input: updateUser! @spread): User
+
 }
 
 
@@ -98,4 +102,8 @@ type LoginOutput {
 input login {
     email: String!
     password: String!
+}
+
+type Subscription {
+  userUpdated(id: ID! @eq): User
 }

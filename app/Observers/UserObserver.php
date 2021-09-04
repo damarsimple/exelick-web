@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\User;
 use illuminate\Support\Str;
+use Nuwave\Lighthouse\Execution\Utils\Subscription;
 
 class UserObserver
 {
@@ -36,6 +37,9 @@ class UserObserver
     {
         $user->username = strtolower($user->username);
         $user->saveQuietly();
+
+        Subscription::broadcast('userUpdated', $user);
+        // \Nuwave\Lighthouse\Execution\Utils\Subscription::broadcast('userUpdated', $user);
     }
 
     /**

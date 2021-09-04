@@ -2,7 +2,9 @@
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +17,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Broadcast::routes(['middleware' => ['api', 'auth:sanctum']]);
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('test', function () {
+    $user = User::first();
+
+    \Nuwave\Lighthouse\Execution\Utils\Subscription::broadcast('userUpdated', $user, false);
+
+    return 'ok';
 });
 
 Route::prefix('midtrans')->group(function () {

@@ -30,11 +30,15 @@ class CreateUsersTable extends Migration
             $table->json('banned_words')->nullable();
 
             $table->boolean('is_admin')->default(false);
+            $table->boolean('is_active')->default(false);
 
             $table->double('balance')->default(0);
             $table->string('tag');
             $table->string('description')->nullable();
             $table->uuid('stream_key')->unique()->nullable();
+
+            $table->unsignedBigInteger('invited_by')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

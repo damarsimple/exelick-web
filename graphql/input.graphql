@@ -10,7 +10,6 @@ input updateUser {
     name: String
     username: String
     password: String @hash
-    email: String
     tag: String
     description: String
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Picture;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
 /*
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Http;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 
 Route::get('/', function () {
     return view('welcome');

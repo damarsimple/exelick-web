@@ -1,8 +1,12 @@
 <?php
 
 namespace App\GraphQL\Mutations;
+
 use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Invitation;
 
 class SendInvitation
 {
@@ -12,9 +16,8 @@ class SendInvitation
      */
     public function __invoke($_, array $args)
     {
-        if(User::where('email', $args['email'])->exists()){
+        if (User::where('email', $args['email'])->exists()) {
             return ['status' => false, 'message' => 'user exists'];
-
         }
 
         $user = new User();
@@ -30,6 +33,6 @@ class SendInvitation
 
         Mail::to($args['email'])->send(new Invitation($user->username));
 
-           return ['status' => true, 'message' => 'success invitation'];
+        return ['status' => true, 'message' => 'success invitation'];
     }
 }

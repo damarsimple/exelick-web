@@ -49,6 +49,7 @@ class Seed extends Command
         $user->stream_key = Str::random(10);
         $user->email_verified_at = now();
         $user->password =  Hash::make('123456789');
+        $user->is_active = true;
 
         $user->save();
 

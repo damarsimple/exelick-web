@@ -80,7 +80,7 @@ class CreatePurchase
 
         $transaction = new Transaction();
 
-        $transaction->payment_method = 'Xendit - ';
+        $transaction->payment_method = 'Midtrans';
 
         $transaction->uuid = $transactionRef;
 

@@ -380,7 +380,6 @@ return [
             ],
             'pusher' => [
                 'driver' => 'pusher',
-                'routes' => \Nuwave\Lighthouse\Subscriptions\SubscriptionRouter::class . '@pusher',
                 'connection' => 'pusher',
             ],
             'echo' => [
@@ -394,7 +393,7 @@ return [
          * Controls the format of the extensions response.
          * Allowed values: 1, 2
          */
-        'version' => env('LIGHTHOUSE_SUBSCRIPTION_VERSION', 1),
+        'version' => env('LIGHTHOUSE_SUBSCRIPTION_VERSION', 2),
 
         /*
          * Should the subscriptions extension be excluded when the response has no subscription channel?
