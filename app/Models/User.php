@@ -28,6 +28,7 @@ class User extends Authenticatable
         'username',
         'description',
         'tag',
+        'is_active'
     ];
 
     /**
@@ -47,15 +48,19 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'overlay_settings' => 'array',
-        'server_metadatas' => 'array',
         'socials' => 'array',
         'variables' => 'array',
+        'subathon_time_end' => 'datetime',
     ];
 
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function purchases(): HasMany
+    {
+        return $this->hasMany(Purchase::class, foreignKey: 'receiver_id');
     }
 
     public function profilepicture(): MorphOne
@@ -66,5 +71,15 @@ class User extends Authenticatable
     public function banner(): MorphOne
     {
         return $this->morphOne(Picture::class, 'attachable')->where('roles', PictureRole::BANNER);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function overlays(): HasMany
+    {
+        return $this->hasMany(Overlay::class);
     }
 }

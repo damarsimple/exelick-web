@@ -1,1 +1,15 @@
-v=DKIM1;k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDHDsxNJhywvihI4RamKzNDE2a3lYMEUw2xHpr/VqqwLmyqGcyFw0zZuoe2f8CWDUssma5rkYblL/II4NBq3I7iF3brtSR1n3ID9RXa67ehxUzLtE3V35rIJTTwdUyiUww1/PpJl6gpFb7TD/RJJq7MOzkrWGJVzLV1O4Ux/TfmGQIDAQAB
+<?php
+go(function () {
+    $redis = new Swoole\Coroutine\Redis();
+    $redis->connect("127.0.0.1", 6379);
+    $msg = $redis->subscribe(array("exlunode_database_mc_abcd"));
+    while ($msg = $redis->recv()) {
+        var_dump($msg);
+    }
+});
+
+go(function () {
+    $redis = new Swoole\Coroutine\Redis();
+    $redis->connect("127.0.0.1", 6379);
+    Swoole\Timer::tick(1000, fn () => $redis->publish('exlunode_database_mc_abcd', 'say hello, ' . time()));
+});

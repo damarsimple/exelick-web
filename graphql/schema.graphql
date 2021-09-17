@@ -14,13 +14,16 @@ scalar Upload
 
 type Query {
     # User
-    me: User @auth
-    users: [User!]! @paginate(type: CONNECTION)
+    allUsers: [User!]! @all
+    users: [User!]!
+        @orderBy(column: "created_at", direction: DESC)
+        @paginate(type: CONNECTION)
     user(id: ID! @eq): User @find
     userByUsername(username: String! @eq): User @first
+    userByStreamKey(stream_key: String! @eq): User @first
     # Product
     products(
-        user_id: ID @eq
+        user_id: ID! @eq
         name: String @where(operator: "like")
     ): [Product!]! @paginate(type: CONNECTION)
     product(id: ID @eq): Product @find
@@ -28,6 +31,27 @@ type Query {
     getTax(price: Int!): TaxResult!
 
     query_invitation(username: String!): User
+}
+
+type DashboardData {
+    total_product: Int!
+    analytics_sentiment: Float!
+    transaction_total: Float!
+    transaction_total_month: Float!
+    purchase_total: Int!
+    purchase_total_month: Int!
+}
+extend type Query @guard {
+    #user
+    me: User @auth
+
+    get_my_dashboard_data: DashboardData
+
+    #transactions
+    transactions(user_id: ID! @eq): [Transaction!]!
+        @can(ability: "viewAny", injectArgs: true)
+        @orderBy(column: "created_at", direction: DESC)
+        @paginate(type: CONNECTION)
 }
 
 type TaxResult {
@@ -38,7 +62,26 @@ input PictureAssignInput {
     id: ID!
 }
 
+input UserVariableInput {
+    name: String!
+    value: String!
+}
+
 type Mutation {
+    # Purchase
+    createPurchase(input: createPurchase! @spread): PurchaseData
+
+    login(input: login! @spread): LoginOutput
+
+    upload_picture(file: Upload! @spread): Picture
+
+    activate_invitation(uuid: String!, input: updateUser! @spread): User
+}
+
+extend type Mutation @guard {
+    #admin
+    send_invitation(email: String!): InvitationOutput
+
     # User
     createUser(input: createUser! @spread): User @create @can(ability: "create")
     updateUser(id: ID! @eq, input: updateUser! @spread): User
@@ -50,6 +93,7 @@ type Mutation {
         profilepicture: PictureAssignInput
         banner: PictureAssignInput
     ): User
+    update_user_custom(id: ID!, variables: [UserVariableInput!]!): User
     # Product
     createProduct(input: createProduct! @spread): Product
         @create
@@ -58,52 +102,28 @@ type Mutation {
     deleteProduct(id: ID!): Product @delete
 
     update_product_picture(id: ID!, cover: PictureAssignInput): Product
-    # Purchase
-    createPurchase(input: createPurchase! @spread): PurchaseData
-
-    login(input: login! @spread): LoginOutput
-
-    upload_picture(file: Upload! @spread): Picture
-
 
     #admin
     send_invitation(email: String!): InvitationOutput
 
-    activate_invitation(uuid: String!, input: updateUser! @spread): User
+    test_donation(stream_key: String!): GenericOutput
 
+    create_update_overlay(
+        theme: NotificationTheme
+        type: OverlayType!
+        message: String
+        color: String
+        duration: Int
+        picture_id: ID
+        audio_id: ID
+    ): Overlay
 }
 
-
-type InvitationOutput {
+type GenericOutput {
     status: Boolean!
     message: String
 }
 
-type MidtransRequestOutput {
-    token: String!
-    redirect_url: String!
-    uuid: String!
-}
-
-type PurchaseData {
-    message: String
-    success: Boolean!
-    purchase: Purchase
-    transaction: Transaction
-    payment: MidtransRequestOutput
-}
-
-type LoginOutput {
-    user: User
-    token: String
-    message: String
-}
-
-input login {
-    email: String!
-    password: String!
-}
-
 type Subscription {
-  userUpdated(id: ID! @eq): User
+    userUpdated(id: ID! @eq): User
 }

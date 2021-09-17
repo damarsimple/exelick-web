@@ -24,8 +24,6 @@ class CreateUsersTable extends Migration
             $table->string('password');
 
             $table->json('socials')->nullable();
-            $table->json('overlay_settings')->nullable();
-            $table->json('server_metadatas')->nullable();
             $table->json('variables')->nullable();
             $table->json('banned_words')->nullable();
 
@@ -39,6 +37,7 @@ class CreateUsersTable extends Migration
 
             $table->unsignedBigInteger('invited_by')->nullable();
 
+            $table->timestamp('subathon_time_end')->default(now());
             $table->rememberToken();
             $table->timestamps();
         });

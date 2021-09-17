@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\PurchasePaid;
 use App\Libraries\Tripay;
 use App\Models\Purchase;
 

@@ -1,3 +1,15 @@
+type Overlay {
+    id: ID!
+    type: String!
+    created_at: DateTime!
+    updated_at: DateTime!
+
+    metadata: OverlayData
+    thumbnail: Picture @morphOne
+    audio: Audio @morphOne
+    user: User! @belongsTo
+}
+
 type Game {
     id: ID!
     name: String!
@@ -18,21 +30,22 @@ type User {
     socials: [UserSocial]
     stream_key: String!
     balance: Float!
-    overlay_settings: [OverlaySetting]!
-    server_metadatas: [ServerMetadata]!
     variables: [UserVariable]!
     banned_words: [String]!
 
     products(name: String @where(operator: "like")): [Product]!
         @hasMany(type: CONNECTION)
 
-    productCount: Int! @count(relation: "products")
+    transactions: [Transaction]! @hasMany(type: CONNECTION)
 
     profilepicture: Picture @morphOne
     banner: Picture @morphOne
-
+    subathon_time_end: DateTime!
     is_admin: Boolean!
     is_active: Boolean!
+
+    overlays: [Overlay]! @hasMany
+    overlay(type: OverlayType! @eq): Overlay @find
 }
 
 type PurchaseProductPivot {
@@ -49,6 +62,7 @@ type Product {
     is_stackable: Boolean!
     user: User! @belongsTo
     commands: [String]
+    subathon_time: Int!
     price: Float
     user_id: ID!
     description: String
@@ -85,6 +99,7 @@ type Transaction {
     request: String
     callback: String
     user: User! @belongsTo
+    purchase: Purchase! @belongsTo
 }
 
 type Picture {
@@ -98,6 +113,7 @@ type Picture {
     original_size: Int!
     cid: String
     path: String
+    real_path: String!
 }
 
 type Audio {
@@ -105,6 +121,13 @@ type Audio {
     name: String
     created_at: DateTime!
     updated_at: DateTime!
+
+    mime: String!
+    original_size: Int!
+    original_size: Int!
+    cid: String
+    path: String
+    real_path: String!
 }
 
 type Video {
@@ -113,26 +136,8 @@ type Video {
     created_at: DateTime!
     updated_at: DateTime!
 }
+
 ### NON LARAVEL MODELS ###
-
-type OverlaySetting {
-    color: String
-    duration: String
-    show_link: Boolean
-
-    item_count: Int
-    interval_days: Int
-    title: String
-    subtitle: String
-    extra_message: String
-
-    running_text_type: RunningTextType
-    theme: OverlayTheme
-    separator_type: SeparatorType
-    speed: Speed
-
-    type: OverlayType!
-}
 
 type UserSocial {
     type: SocialType!
@@ -147,7 +152,7 @@ type ServerMetadata {
 
 type UserVariable {
     name: String!
-    value: String!
+    value: String
 }
 
 enum PictureRole {
@@ -156,24 +161,56 @@ enum PictureRole {
     COVER @enum(value: "COVER")
 }
 
-type Picture {
-    id: ID!
-    name: String!
-    created_at: DateTime!
-    updated_at: DateTime!
-
-    cid: String
-    original_size: Int!
-    compressed_size: Int!
-    real_path: String!
-    path: String!
-    roles: PictureRole
-}
-
 type OyRequestTransactionResponse {
     payment_link_id: String!
     message: String!
     email_status: String!
     url: String!
     status: Boolean!
+}
+
+type InvitationOutput {
+    status: Boolean!
+    message: String
+}
+
+type MidtransRequestOutput {
+    token: String!
+    redirect_url: String!
+    uuid: String!
+}
+
+type PurchaseData {
+    message: String
+    success: Boolean!
+    purchase: Purchase
+    transaction: Transaction
+    payment: MidtransRequestOutput
+}
+
+type LoginOutput {
+    user: User
+    token: String
+    message: String
+}
+
+enum NotificationTheme {
+    PLAYFUL @enum(value: "PLAYFUL")
+}
+
+enum Color {
+    RED @enum(value: "RED")
+    YELLOW @enum(value: "YELLOW")
+}
+
+type OverlayData {
+    theme: NotificationTheme
+    message: String
+    color: String
+    duration: Int
+}
+
+enum OverlayType {
+    NOTIFICATION @enum(value: "NOTIFICATION")
+    RUNNINGTEXT @enum(value: "RUNNINGTEXT")
 }

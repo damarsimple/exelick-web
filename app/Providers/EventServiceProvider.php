@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Overlay;
 use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Observers\OverlayObserver;
 use App\Observers\ProductObserver;
 use App\Observers\PurchaseObserver;
 use App\Observers\TransactionObserver;
@@ -39,5 +41,6 @@ class EventServiceProvider extends ServiceProvider
         Product::observe(ProductObserver::class);
         Purchase::observe(PurchaseObserver::class);
         Transaction::observe(TransactionObserver::class);
+        Overlay::observe(OverlayObserver::class);
     }
 }

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 trait Attachable
 {
+
+
+
     public function getPathAttribute(): string
     {
         $context = explode('\\', $this::class);

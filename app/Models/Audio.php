@@ -6,7 +6,7 @@ use App\Traits\Attachable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Picture extends Model
+class Audio extends Model
 {
     use HasFactory, Attachable;
 

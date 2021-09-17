@@ -16,6 +16,10 @@ class SendInvitation
      */
     public function __invoke($_, array $args)
     {
+
+        if (!auth()->user()->is_admin) {
+            return ['status' => false, 'message' => 'you dont have authorization to do this commands'];
+        }
         if (User::where('email', $args['email'])->exists()) {
             return ['status' => false, 'message' => 'user exists'];
         }

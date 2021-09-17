@@ -1,3 +1,15 @@
+input login {
+    email: String!
+    password: String!
+}
+
+
+input createOrUpdateOverlay {
+    type: String!
+    metadata: String!
+}
+
+
 input createUser {
     name: String!
     username: String!
@@ -6,12 +18,14 @@ input createUser {
     tag: String!
     description: String
 }
+
 input updateUser {
     name: String
     username: String
     password: String @hash
     tag: String
     description: String
+    subathon_time_end: DateTime
 }
 
 input createProduct {
@@ -27,6 +41,7 @@ input updateProduct {
     commands: [String]
     price: Float
     description: String
+    subathon_time: Int
 }
 
 input createPurchase {

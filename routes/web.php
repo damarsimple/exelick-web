@@ -29,3 +29,5 @@ Route::get('/files/{context}/{id}', function ($context, $id) {
             return response($response->body(), 200, ['content-type' => 'image/png']);
     }
 });
+
+Route::get('/test', fn () => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));

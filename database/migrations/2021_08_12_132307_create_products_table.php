@@ -19,6 +19,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->boolean('is_stackable')->default(false);
             $table->json('commands')->nullable();
+            $table->integer('subathon_time')->default(0);
             $table->string('description')->nullable();
             $table->double('price')->nullable();
             $table->timestamps();
